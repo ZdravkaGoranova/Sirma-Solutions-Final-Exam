@@ -1,0 +1,34 @@
+.hero-image {
+  /* width: 100%; */
+  width: 100vw;
+  height: 400px;
+  background-image: url('/european.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .hero-image {
+    height: 350px; 
+  }
+}
+
+@media (max-width: 992px) {
+  .hero-image {
+    height: 300px; 
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-image {
+    height: 250px; 
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-image {
+    height: 200px; 
+  }
+}

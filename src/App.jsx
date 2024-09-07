@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home.jsx';
 import MatchDetails from './components/MatchDetails.jsx';
 import TeamDetails from './components/TeamDetails.jsx';
+import Header from './components/Header.jsx';
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -12,6 +13,7 @@ function App() {
   return (
     <>
       <main>
+        <Header/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/matchDetails" element={<MatchDetails />} />
