@@ -22,13 +22,11 @@ export default function Home() {
       const filteredMatches = parsedMatches.filter(
         (match) => match.Date <= endDate,
       );
-      console.log(filteredMatches);
 
       const map = teamsData.reduce((acc, team) => {
         acc[team.ID] = team.Name;
         return acc;
       }, {});
-      console.log(map);
 
       setMatches(filteredMatches);
       setTeams(teamsData);
@@ -37,6 +35,13 @@ export default function Home() {
 
     fetchData();
   }, []);
+
+  const getWinner = (ATeamID, BTeamID, score) => {
+    const [aScore, bScore] = score.split('-').map(Number);
+    if (aScore > bScore) return ATeamID;
+    if (bScore > aScore) return BTeamID;
+    return 'Draw';
+  };
 
   return (
     <>
@@ -47,6 +52,7 @@ export default function Home() {
         <table id="players">
           <thead>
             <tr>
+              <th>Winner</th>
               <th>ATeamID</th>
               <th>Score</th>
               <th>BTeamID</th>
@@ -56,6 +62,13 @@ export default function Home() {
           <tbody>
             {matches.map((match, index) => (
               <tr key={index}>
+                <td>
+                  {getWinner(
+                    teamMap[match.ATeamID],
+                    teamMap[match.BTeamID],
+                    match.Score,
+                  )}
+                </td>
                 <td>{teamMap[match.ATeamID] || 'Unknown'}</td>
                 <td>{match.Score}</td>
                 <td>{teamMap[match.BTeamID] || 'Unknown'}</td>
