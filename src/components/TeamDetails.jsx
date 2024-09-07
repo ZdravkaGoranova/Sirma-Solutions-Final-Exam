@@ -44,8 +44,8 @@ export default function TeamDetails() {
               value={selectedPosition}
               onChange={handlePositionChange}
             >
-              <option value="All">All</option>
-              <option value="GK">Goalkeeper (GK)</option>
+              <option value="All">ALL</option>
+              <option value="GK">GOALKEEPER (GK)</option>
               <option value="DF">DEFENDER (DF)</option>
               <option value="MF">MIDFIELDER (MF)</option>
               <option value="FW">FORWARD (FW)</option>
