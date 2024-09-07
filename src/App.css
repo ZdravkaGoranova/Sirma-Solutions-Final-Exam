@@ -1,10 +1,21 @@
+:root {
+  --green-color: #00bb5d;
+  --green-dark-color: #048455;
+  --blue-color: #133adc;
+  --red-color: #fe0101;
+  --yellow-color: #ffcc00;
+  --white-color: #ffffff;
+  --white-grey-color: #f2f2f2;
+  --white-dark-color: #d0d0d0;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
-
+/* 
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -39,4 +50,4 @@
 
 .read-the-docs {
   color: #888;
-}
+} */
