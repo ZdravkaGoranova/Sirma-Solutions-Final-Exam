@@ -18,7 +18,6 @@ export default function TeamDetails() {
   }, []);
 
   const handlePositionChange = (event) => {
-    debugger;
     setSelectedPosition(event.target.value);
   };
 
