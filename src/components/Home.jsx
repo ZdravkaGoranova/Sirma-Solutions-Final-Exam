@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { loadCSV } from '../utils/csvUtils.js';
 
+import Loading from './Loading.jsx';
+
 export default function Home() {
   const [teams, setTeams] = useState([]);
   const [matches, setMatches] = useState([]);
@@ -45,38 +47,41 @@ export default function Home() {
 
   return (
     <>
-      <h1>Home Page</h1>
       <div>
         <h1>Matches</h1>
 
-        <table id="players">
-          <thead>
-            <tr>
-              <th>Winner</th>
-              <th>ATeamID</th>
-              <th>Score</th>
-              <th>BTeamID</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {matches.map((match, index) => (
-              <tr key={index}>
-                <td>
-                  {getWinner(
-                    teamMap[match.ATeamID],
-                    teamMap[match.BTeamID],
-                    match.Score,
-                  )}
-                </td>
-                <td>{teamMap[match.ATeamID] || 'Unknown'}</td>
-                <td>{match.Score}</td>
-                <td>{teamMap[match.BTeamID] || 'Unknown'}</td>
-                <td>{match.Date.toLocaleDateString()}</td>
+        {matches.length <= 0 ? (
+          <Loading />
+        ) : (
+          <table id="players">
+            <thead>
+              <tr>
+                <th>Winner</th>
+                <th>ATeamID</th>
+                <th>Score</th>
+                <th>BTeamID</th>
+                <th>Date</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {matches.map((match, index) => (
+                <tr key={index}>
+                  <td>
+                    {getWinner(
+                      teamMap[match.ATeamID],
+                      teamMap[match.BTeamID],
+                      match.Score,
+                    )}
+                  </td>
+                  <td>{teamMap[match.ATeamID] || 'Unknown'}</td>
+                  <td>{match.Score}</td>
+                  <td>{teamMap[match.BTeamID] || 'Unknown'}</td>
+                  <td>{match.Date.toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </>
   );
