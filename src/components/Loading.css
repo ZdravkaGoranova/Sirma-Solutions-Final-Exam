@@ -1,0 +1,14 @@
+.loading{
+   padding: 20px 0; 
+}
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid var(--green-color);
+  border-bottom: 16px solid var(--green-color);
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  margin: 0 auto;
+}
