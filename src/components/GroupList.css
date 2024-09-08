@@ -1,0 +1,56 @@
+/* ------------ */
+
+.groups {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 20px;
+  gap: 20px;
+}
+
+.columns {
+  background-color: var(--white-grey-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 200px;
+  padding: 15px 0;
+}
+
+.group {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+li {
+  font-size: 0.9em;
+  color: var(--black-color);
+  margin-bottom: 8px;
+}
+.groupName {
+  font-size: 1.2em;
+  font-weight: bold;
+
+  color: var(--white-color);
+  background-color: var(--green-dark-color);
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.winner {
+  font-size: 1em;
+  font-weight: bold;
+  color: var(--green-dark-color);
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.group li:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .columns {
+    max-width: 100%;
+  }
+}
