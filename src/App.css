@@ -36,3 +36,15 @@ main {
   flex: 1;
   padding-bottom: 10px; 
 }
+
+.winner {
+  background-color: lightgreen;
+}
+
+.loser {
+  background-color: lightcoral;
+}
+
+.draw {
+  background-color: lightgrey;
+}
