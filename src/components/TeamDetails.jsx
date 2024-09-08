@@ -24,7 +24,6 @@ export default function TeamDetails() {
   };
 
   const sortedPlayers = [...players].sort((a, b) => {
-    debugger
     if (sortConfig.key) {
       const aValue = a[sortConfig.key].toString().toLowerCase();
       const bValue = b[sortConfig.key].toString().toLowerCase();
@@ -57,11 +56,7 @@ export default function TeamDetails() {
         <h1>Team Details</h1>
 
         {players.length <= 0 ? (
-          // <div>
-          //   <h4>Loading data</h4>
-          //   <div className="loader"></div>
-          // </div>
-          <Loading/>
+          <Loading />
         ) : (
           <div>
             <div className="teamIDFilter">
@@ -84,7 +79,7 @@ export default function TeamDetails() {
               <thead>
                 <tr>
                   <th>TeamNumber</th>
-                  <th >FullName</th>
+                  <th>FullName</th>
                   <th onClick={() => handleSort('Position')}>Position</th>
                   <th>TeamID</th>
                 </tr>
