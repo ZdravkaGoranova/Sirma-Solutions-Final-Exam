@@ -18,12 +18,31 @@ export default function Home() {
 
       if (aScore > bScore) {
         ATeam.points += 3;
+        ATeam.wins += aScore;
+        ATeam.losses += bScore;
+
+        BTeam.wins += bScore;
+        BTeam.losses += aScore;
       } else if (bScore > aScore) {
         BTeam.points += 3;
+        BTeam.wins += bScore;
+        BTeam.losses += aScore;
+
+        ATeam.wins += aScore;
+        ATeam.losses += bScore;
       } else {
         ATeam.points += 1;
+        ATeam.draws += 1;
+        ATeam.wins += aScore;
+        ATeam.losses += bScore;
+
         BTeam.points += 1;
+        BTeam.draws += 1;
+        BTeam.wins += bScore;
+        BTeam.losses += aScore;
       }
+      ATeam.difference = ATeam.wins - ATeam.losses;
+      BTeam.difference = BTeam.wins - BTeam.losses;
     });
 
     return updatedTeams;
@@ -52,6 +71,10 @@ export default function Home() {
           name: team.Name,
           group: team.Group,
           points: 0,
+          wins: 0,
+          draws: 0,
+          losses: 0,
+          difference: 0,
         };
         return acc;
       }, {});
