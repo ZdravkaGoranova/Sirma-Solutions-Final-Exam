@@ -8,12 +8,22 @@ export default function Home() {
   const [teams, setTeams] = useState([]);
   const [matches, setMatches] = useState([]);
   const [teamMap, setTeamMap] = useState({});
+
   const [groupA, setGroupA] = useState([]);
   const [groupB, setGroupB] = useState([]);
   const [groupC, setGroupC] = useState([]);
   const [groupD, setGroupD] = useState([]);
   const [groupE, setGroupE] = useState([]);
   const [groupF, setGroupF] = useState([]);
+
+  const groups = {
+    A: [],
+    B: [],
+    C: [],
+    D: [],
+    E: [],
+    F: [],
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -32,26 +42,44 @@ export default function Home() {
         (match) => match.Date <= endDate,
       );
 
-      const map = teamsData.reduce((acc, team) => {
-        acc[team.ID] = team.Name;
+      let teamsDetails = teamsData.reduce((acc, team) => {
+        acc[team.ID] = {
+          id: team.ID,
+          name: team.Name,
+          points: 0,
+          wins: 0,
+          draws: 0,
+          losses: 0,
+        };
         return acc;
       }, {});
+      console.log(teamsDetails);
+
+      let map = teamsData.reduce((acc, team) => {
+        acc[team.Name] = {
+          id: team.ID,
+          points: 0,
+          wins: 0,
+          draws: 0,
+          losses: 0,
+        };
+        return acc;
+      }, {});
+
       console.log(map);
 
-      const groups = {
-        A: [],
-        B: [],
-        C: [],
-        D: [],
-        E: [],
-        F: [],
-      };
+  
 
       teamsData.forEach((team) => {
         if (groups[team.Group]) {
-          groups[team.Group].push(team.Name);
+          groups[team.Group][team.Name] = {
+            name: team.Name,
+            ...map[team.Name],
+          };
         }
       });
+
+      console.log(groups);
 
       setGroupA(groups.A);
       setGroupB(groups.B);
@@ -61,18 +89,25 @@ export default function Home() {
       setGroupF(groups.F);
 
       setMatches(filteredMatches);
-      setTeams(teamsData);
+      setTeams(teamsDetails);
       setTeamMap(map);
     }
 
     fetchData();
   }, []);
 
+  console.log(matches);
+
   const getWinner = (ATeamID, BTeamID, score) => {
     const [aScore, bScore] = score.split('-').map(Number);
-    if (aScore > bScore) return ATeamID;
-    if (bScore > aScore) return BTeamID;
-    return 'Draw';
+
+    if (aScore > bScore) {
+      return ATeamID;
+    } else if (bScore > aScore) {
+      return BTeamID;
+    } else if (bScore == aScore) {
+      return 'Draw';
+    }
   };
 
   return (
@@ -128,3 +163,40 @@ export default function Home() {
     </>
   );
 }
+
+// const updatePoints = (winnerID, loserID, groupName) => {
+//   // if (winnerID !== 'Draw') {
+//   //   groups[groupName][teamMap[winnerID]].points += 3;
+//   //   groups[groupName][teamMap[winnerID]].wins += 1;
+//   //   groups[groupName][teamMap[loserID]].losses += 1;
+//   // } else {
+//   //   groups[groupName][teamMap[winnerID]].points += 1;
+//   //   groups[groupName][teamMap[loserID]].points += 1;
+//   //   groups[groupName][teamMap[winnerID]].draws += 1;
+//   //   groups[groupName][teamMap[loserID]].draws += 1;
+//   // }
+//   // console.log(winnerID);
+//   // console.log(loserID);
+//   // console.log(groupName);
+// };
+
+// if (resultOfMatch !== 'Draw') {
+//   // Ако resultOfMatch е число
+//   console.log('Това е число:', resultOfMatch);
+//   const teamName = map[Number(resultOfMatch)];
+//   console.log(teamName);
+// } else if (resultOfMatch === 'string') {
+//   // Ако resultOfMatch е текст
+//   console.log('Това е текст:', resultOfMatch);
+// }
+
+// if (resultOfMach === 'Draw') {
+//   groups[groupName][match.ATeamID].points += 1;
+//   groups[groupName][match.ATeamID].draws += 1;
+
+//   groups[groupName][match.BTeamID].points += 1;
+//   groups[groupName][match.BTeamID].draws += 1;
+// }
+
+// updatePoints(winnerID, match.ATeamID, match.Group);
+// updatePoints(winnerID, match.BTeamID, match.Group);
