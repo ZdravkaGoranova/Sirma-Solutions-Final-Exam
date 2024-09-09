@@ -5,9 +5,29 @@ import Loading from './Loading.jsx';
 import GroupList from './GroupList.jsx';
 
 export default function Home() {
-  const [teams, setTeams] = useState([]);
+  const [teams, setTeams] = useState({});
   const [matches, setMatches] = useState([]);
-  const [teamMap, setTeamMap] = useState({});
+
+  const calculatePoints = (matches, teams) => {
+    const updatedTeams = { ...teams };
+
+    matches.forEach((match) => {
+      const ATeam = updatedTeams[match.ATeamID];
+      const BTeam = updatedTeams[match.BTeamID];
+      const [aScore, bScore] = match.Score.split('-').map(Number);
+
+      if (aScore > bScore) {
+        ATeam.points += 3;
+      } else if (bScore > aScore) {
+        BTeam.points += 3;
+      } else {
+        ATeam.points += 1;
+        BTeam.points += 1;
+      }
+    });
+
+    return updatedTeams;
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -36,48 +56,17 @@ export default function Home() {
         return acc;
       }, {});
 
+      const updatedTeams = calculatePoints(filteredMatches, teamsDetails);
+
       setMatches(filteredMatches);
-      setTeams(teamsDetails);
-      setTeamMap(teamsDetails);
+      setTeams(updatedTeams);
     }
 
     fetchData();
   }, []);
 
-  console.log(teamMap);
+  console.log(teams);
   console.log(matches);
-
-  const calculatePoints = () => {
-    const updatedTeams = { ...teams };
-
-    matches.forEach((match) => {
-      const ATeam = updatedTeams[match.ATeamID];
-      const BTeam = updatedTeams[match.BTeamID];
-      const [aScore, bScore] = match.Score.split('-').map(Number);
-
-      if (aScore > bScore) {
-        ATeam.points += 3;
-      } else if (bScore > aScore) {
-        BTeam.points += 3;
-      } else {
-        ATeam.points += 1;
-        BTeam.points += 1;
-      }
-    });
-
-    console.log(updatedTeams);
-    return updatedTeams;
-  };
-
-  useEffect(() => {
-    if (matches.length > 0 && Object.keys(teamMap).length > 0) {
-      const updatedTeams = calculatePoints();
-      if (JSON.stringify(updatedTeams) !== JSON.stringify(teams)) {
-        setTeams(updatedTeams);
-        setTeamMap(updatedTeams);
-      }
-    }
-  }, [matches, teamMap]);
 
   const getWinner = (ATeam, BTeam, score) => {
     const [aScore, bScore] = score.split('-').map(Number);
@@ -85,60 +74,64 @@ export default function Home() {
   };
 
   const teamsArray = Object.values(teams);
-  const result = Object.groupBy(teamsArray, ({ group }) => group);
+
+  const result = teamsArray.reduce((acc, team) => {
+    const group = team.group;
+    if (!acc[group]) {
+      acc[group] = [];
+    }
+    acc[group].push(team);
+    return acc;
+  }, {});
 
   console.log(result);
   console.log(result.A);
+
+  if (matches.length === 0 || teamsArray.length === 0) {
+    return <Loading />;
+  }
 
   return (
     <>
       <div>
         <h1>Groups</h1>
-        {teams.length <= 0 ? (
-          <Loading />
-        ) : (
-          <div className="groups">
-            <GroupList groupName="Group A" groupTeams={result.A} />
-            <GroupList groupName="Group B" groupTeams={result.B} />
-            <GroupList groupName="Group C" groupTeams={result.C} />
-            <GroupList groupName="Group D" groupTeams={result.D} />
-            <GroupList groupName="Group E" groupTeams={result.E} />
-            <GroupList groupName="Group F" groupTeams={result.F} />
-          </div>
-        )}
+        <div className="groups">
+          <GroupList groupName="Group A" groupTeams={result.A} />
+          <GroupList groupName="Group B" groupTeams={result.B} />
+          <GroupList groupName="Group C" groupTeams={result.C} />
+          <GroupList groupName="Group D" groupTeams={result.D} />
+          <GroupList groupName="Group E" groupTeams={result.E} />
+          <GroupList groupName="Group F" groupTeams={result.F} />
+        </div>
         <h1>Results of the matches</h1>
-        {matches.length <= 0 ? (
-          <Loading />
-        ) : (
-          <table id="players">
-            <thead>
-              <tr>
-                <th>Winner</th>
-                <th>ATeamID</th>
-                <th>Score</th>
-                <th>BTeamID</th>
-                <th>Date</th>
+        <table id="players">
+          <thead>
+            <tr>
+              <th>Winner</th>
+              <th>ATeamID</th>
+              <th>Score</th>
+              <th>BTeamID</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {matches.map((match, index) => (
+              <tr key={index}>
+                <td>
+                  {getWinner(
+                    teams[match.ATeamID],
+                    teams[match.BTeamID],
+                    match.Score,
+                  )}
+                </td>
+                <td>{teams[match.ATeamID].name || 'Unknown'}</td>
+                <td>{match.Score}</td>
+                <td>{teams[match.BTeamID].name || 'Unknown'}</td>
+                <td>{match.Date.toLocaleDateString()}</td>
               </tr>
-            </thead>
-            <tbody>
-              {matches.map((match, index) => (
-                <tr key={index}>
-                  <td>
-                    {getWinner(
-                      teamMap[match.ATeamID],
-                      teamMap[match.BTeamID],
-                      match.Score,
-                    )}
-                  </td>
-                  <td>{teamMap[match.ATeamID].name || 'Unknown'}</td>
-                  <td>{match.Score}</td>
-                  <td>{teamMap[match.BTeamID].name || 'Unknown'}</td>
-                  <td>{match.Date.toLocaleDateString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+            ))}
+          </tbody>
+        </table>
       </div>
     </>
   );
