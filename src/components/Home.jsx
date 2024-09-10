@@ -1,52 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import PropTypes from 'prop-types';
+
 import { loadCSV } from '../utils/csvUtils.js';
+import { calculatePoints, getWinner } from '../utils/teamsUtils.js';
 
 import Loading from './Loading.jsx';
 import GroupList from './GroupList.jsx';
 
-export default function Home() {
-  const [teams, setTeams] = useState({});
-  const [matches, setMatches] = useState([]);
-
-  const calculatePoints = (matches, teams) => {
-    const updatedTeams = { ...teams };
-
-    matches.forEach((match) => {
-      const ATeam = updatedTeams[match.ATeamID];
-      const BTeam = updatedTeams[match.BTeamID];
-      const [aScore, bScore] = match.Score.split('-').map(Number);
-
-      if (aScore > bScore) {
-        ATeam.points += 3;
-        ATeam.wins += aScore;
-        ATeam.losses += bScore;
-
-        BTeam.wins += bScore;
-        BTeam.losses += aScore;
-      } else if (bScore > aScore) {
-        BTeam.points += 3;
-        BTeam.wins += bScore;
-        BTeam.losses += aScore;
-
-        ATeam.wins += aScore;
-        ATeam.losses += bScore;
-      } else {
-        ATeam.points += 1;
-        ATeam.draws += 1;
-        ATeam.wins += aScore;
-        ATeam.losses += bScore;
-
-        BTeam.points += 1;
-        BTeam.draws += 1;
-        BTeam.wins += bScore;
-        BTeam.losses += aScore;
-      }
-      ATeam.difference = ATeam.wins - ATeam.losses;
-      BTeam.difference = BTeam.wins - BTeam.losses;
-    });
-
-    return updatedTeams;
-  };
+export default function Home({ teams, setTeams, matches, setMatches }) {
 
   useEffect(() => {
     async function fetchData() {
@@ -91,11 +52,6 @@ export default function Home() {
   console.log(teams);
   console.log(matches);
 
-  const getWinner = (ATeam, BTeam, score) => {
-    const [aScore, bScore] = score.split('-').map(Number);
-    return aScore > bScore ? ATeam.name : bScore > aScore ? BTeam.name : 'Draw';
-  };
-
   const teamsArray = Object.values(teams);
 
   const result = teamsArray.reduce((acc, team) => {
@@ -119,12 +75,42 @@ export default function Home() {
       <div>
         <h1>Groups</h1>
         <div className="groups">
-          <GroupList groupName="Group A" groupTeams={result.A} />
-          <GroupList groupName="Group B" groupTeams={result.B} />
-          <GroupList groupName="Group C" groupTeams={result.C} />
-          <GroupList groupName="Group D" groupTeams={result.D} />
-          <GroupList groupName="Group E" groupTeams={result.E} />
-          <GroupList groupName="Group F" groupTeams={result.F} />
+          <GroupList
+            groupName="Group A"
+            groupTeams={result.A}
+            teams={teams}
+            matches={matches}
+          />
+          <GroupList
+            groupName="Group B"
+            groupTeams={result.B}
+            teams={teams}
+            matches={matches}
+          />
+          <GroupList
+            groupName="Group C"
+            groupTeams={result.C}
+            teams={teams}
+            matches={matches}
+          />
+          <GroupList
+            groupName="Group D"
+            groupTeams={result.D}
+            teams={teams}
+            matches={matches}
+          />
+          <GroupList
+            groupName="Group E"
+            groupTeams={result.E}
+            teams={teams}
+            matches={matches}
+          />
+          <GroupList
+            groupName="Group F"
+            groupTeams={result.F}
+            teams={teams}
+            matches={matches}
+          />
         </div>
         <h1>Results of the matches</h1>
         <table id="players">
@@ -159,3 +145,10 @@ export default function Home() {
     </>
   );
 }
+
+Home.propTypes = {
+  teams: PropTypes.object.isRequired,
+  setTeams: PropTypes.func.isRequired,
+  matches: PropTypes.array.isRequired,
+  setMatches: PropTypes.func.isRequired,
+};
