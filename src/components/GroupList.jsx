@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './GroupList.css';
 
-export default function GroupList({ groupName, groupTeams }) {
-  console.log('Group:', groupName);
-  console.log('Teams:', groupTeams);
-
+export default function GroupList({ groupName, groupTeams, matches }) {
   const [winner, setWinner] = useState('');
+
+  // console.log(matches);
 
   useEffect(() => {
     if (groupTeams.length > 0) {
@@ -34,6 +33,7 @@ export default function GroupList({ groupName, groupTeams }) {
           setWinner(teamsWithBestGoalDifference[0].name);
         } else {
           // 2. sort by wins
+
           teamsWithBestGoalDifference.sort((a, b) => b.wins - a.wins);
 
           const bestGoalWins = teamsWithBestGoalDifference[0].wins;
@@ -46,10 +46,35 @@ export default function GroupList({ groupName, groupTeams }) {
             setWinner(teamsWithBestGoalsWins[0].name);
           } else {
             // 3. result from Direct duels
-            const finalWinner = 0;
-            // ...............
-            if (finalWinner) {
-              setWinner(finalWinner.name);
+            const ATeamID = teamsWithBestGoalDifference[0].id;
+            const BTeamID = teamsWithBestGoalDifference[1].id;
+            const directMatch = matches.find(
+              (match) =>
+                (Number(match.ATeamID) === ATeamID &&
+                  Number(match.BTeamID) === BTeamID) ||
+                (Number(match.ATeamID) === BTeamID &&
+                  Number(match.BTeamID) === ATeamID),
+            );
+            console.log(directMatch);
+            if (directMatch) {
+              const [aScore, bScore] = directMatch.Score.split('-').map(Number);
+              if (Number(directMatch.ATeamID) === ATeamID) {
+                if (aScore > bScore) {
+                  setWinner(teamsWithBestGoalsWins[0].name);
+                } else if (bScore > aScore) {
+                  setWinner(teamsWithBestGoalsWins[1].name);
+                } else {
+                  setWinner('Draw');
+                }
+              } else {
+                if (aScore > bScore) {
+                  setWinner(teamsWithBestGoalsWins[1].name);
+                } else if (bScore > aScore) {
+                  setWinner(teamsWithBestGoalsWins[0].name);
+                } else {
+                  setWinner('Draw');
+                }
+              }
             } else {
               setWinner('No clear winner');
             }
@@ -57,7 +82,7 @@ export default function GroupList({ groupName, groupTeams }) {
         }
       }
     }
-  }, [groupTeams]);
+  }, [groupTeams, matches]);
 
   return (
     <div className="card">
@@ -91,4 +116,6 @@ GroupList.propTypes = {
       difference: PropTypes.number.isRequired,
     }),
   ).isRequired,
+
+  matches: PropTypes.array.isRequired,
 };
