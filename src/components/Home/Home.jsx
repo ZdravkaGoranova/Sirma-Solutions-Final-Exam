@@ -3,6 +3,14 @@ import PropTypes from 'prop-types';
 
 import { loadCSV } from '../../utils/csvUtils.js';
 import { calculatePoints, getWinner } from '../../utils/teamsUtils.js';
+import {
+  fieldsValidation,
+  scoreValidation,
+  idValidation,
+  aTeamIDValidation,
+  bTeamIDValidation,
+  dateIDValidation,
+} from '../../utils/fildsValidations.js';
 
 import Loading from '../Loading/Loading.jsx';
 import GroupList from '../GroupList/GroupList.jsx';
@@ -10,8 +18,21 @@ import GroupList from '../GroupList/GroupList.jsx';
 export default function Home({ teams, setTeams, matches, setMatches }) {
   useEffect(() => {
     async function fetchData() {
+
       const matchesData = await loadCSV('/matches.csv');
       const teamsData = await loadCSV('/teams.csv');
+
+      console.log(matchesData);
+
+      //  hasFields;
+      const hasFieldsMatches = matchesData.map((mach) => Object.keys(mach));
+
+      fieldsValidation(hasFieldsMatches);
+      scoreValidation(matchesData);
+      idValidation(matchesData);
+      aTeamIDValidation(matchesData);
+      bTeamIDValidation(matchesData);
+      dateIDValidation(matchesData);
 
       const parsedMatches = matchesData.map((match) => {
         const [month, day, year] = match.Date.split('/');
@@ -63,7 +84,6 @@ export default function Home({ teams, setTeams, matches, setMatches }) {
   }, {});
 
   console.log(result);
-  console.log(result.A);
 
   if (matches.length === 0 || teamsArray.length === 0) {
     return <Loading />;
