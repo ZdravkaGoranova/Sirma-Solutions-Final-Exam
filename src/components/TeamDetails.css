@@ -1,6 +1,6 @@
 /* table  */
 #players {
-  border-collapse: collapse;
+  border-collapse: separate;
   width: 100%;
 }
 
@@ -65,8 +65,6 @@
 .position.fw {
   background-color: var(--yellow-color);
 }
-
-
 
 @-webkit-keyframes spin {
   0% {
