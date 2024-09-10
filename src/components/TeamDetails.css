@@ -1,8 +1,3 @@
-.players-list {
-  width: 50%;
-  margin: 0 auto;
-}
-
 /* table  */
 #players {
   border-collapse: collapse;
@@ -36,7 +31,7 @@
 }
 
 /* search by position */
-.positionFilter {
+.teamIDFilter {
   padding: 20px;
   background-color: #ddffdd;
   border-left: 6px solid var(--green-color);
@@ -71,18 +66,7 @@
   background-color: var(--yellow-color);
 }
 
-/* loader  */
-.loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid var(--green-color);
-  border-bottom: 16px solid var(--green-color);
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
-  margin: 0 auto;
-}
+
 
 @-webkit-keyframes spin {
   0% {

@@ -1,29 +1,54 @@
-// import React, { useEffect, useState } from 'react';
 import { useEffect, useState } from 'react';
 import { loadCSV } from '../utils/csvUtils.js';
+
 import './TeamDetails.css';
+import Loading from './Loading.jsx';
 
 export default function TeamDetails() {
   const [players, setPlayers] = useState([]);
-  const [selectedPosition, setSelectedPosition] = useState('All');
+  const [selectedTeamID, setSelectedTeamID] = useState('All');
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
   useEffect(() => {
     async function fetchData() {
       const data = await loadCSV('/players.csv');
       setPlayers(data);
-      console.log(data);
     }
-
     fetchData();
   }, []);
 
-  const handlePositionChange = (event) => {
-    setSelectedPosition(event.target.value);
+  const uniqueTeamIDs = [...new Set(players.map((player) => player.TeamID))];
+
+  const handleTeamIDChange = (event) => {
+    setSelectedTeamID(event.target.value);
   };
 
-  const filteredPlayers = players.filter((player) =>
-    selectedPosition === 'All' ? true : player.Position === selectedPosition,
+  const sortedPlayers = [...players].sort((a, b) => {
+    if (sortConfig.key) {
+      const aValue = a[sortConfig.key].toString().toLowerCase();
+      const bValue = b[sortConfig.key].toString().toLowerCase();
+
+      if (aValue < bValue) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+    }
+    return 0;
+  });
+
+  const filteredPlayers = sortedPlayers.filter((player) =>
+    selectedTeamID === 'All' ? true : player.TeamID === selectedTeamID,
   );
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
 
   return (
     <>
@@ -31,41 +56,37 @@ export default function TeamDetails() {
         <h1>Team Details</h1>
 
         {players.length <= 0 ? (
-          <div>
-            <h4>Loading data</h4>
-            <div className="loader"></div>
-          </div>
+          <Loading />
         ) : (
           <div>
-            <div className="positionFilter">
-              <label htmlFor="positionFilter">Filter by Position: </label>
+            <div className="teamIDFilter">
+              <label htmlFor="teamIDFilter">Filter by TeamID: </label>
               <select
-                id="positionFilter"
-                value={selectedPosition}
-                onChange={handlePositionChange}
+                id="teamIDFilter"
+                value={selectedTeamID}
+                onChange={handleTeamIDChange}
               >
                 <option value="All">ALL</option>
-                <option value="GK">GOALKEEPER (GK)</option>
-                <option value="DF">DEFENDER (DF)</option>
-                <option value="MF">MIDFIELDER (MF)</option>
-                <option value="FW">FORWARD (FW)</option>
+                {uniqueTeamIDs.map((teamID, index) => (
+                  <option key={index} value={teamID}>
+                    {teamID}
+                  </option>
+                ))}
               </select>
             </div>
 
             <table id="players">
               <thead>
                 <tr>
-                  {/* <th>ID</th> */}
                   <th>TeamNumber</th>
                   <th>FullName</th>
-                  <th>Position</th>
+                  <th onClick={() => handleSort('Position')}>Position</th>
                   <th>TeamID</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredPlayers.map((player, index) => (
                   <tr key={index}>
-                    {/* <td>{player.ID}</td> */}
                     <td>{player.TeamNumber}</td>
                     <td>{player.FullName}</td>
                     <td className={`position ${player.Position.toLowerCase()}`}>
