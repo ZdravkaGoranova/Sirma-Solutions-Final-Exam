@@ -8,7 +8,6 @@ import Loading from './Loading.jsx';
 import GroupList from './GroupList.jsx';
 
 export default function Home({ teams, setTeams, matches, setMatches }) {
-
   useEffect(() => {
     async function fetchData() {
       const matchesData = await loadCSV('/matches.csv');
@@ -78,37 +77,31 @@ export default function Home({ teams, setTeams, matches, setMatches }) {
           <GroupList
             groupName="Group A"
             groupTeams={result.A}
-            teams={teams}
             matches={matches}
           />
           <GroupList
             groupName="Group B"
             groupTeams={result.B}
-            teams={teams}
             matches={matches}
           />
           <GroupList
             groupName="Group C"
             groupTeams={result.C}
-            teams={teams}
             matches={matches}
           />
           <GroupList
             groupName="Group D"
             groupTeams={result.D}
-            teams={teams}
             matches={matches}
           />
           <GroupList
             groupName="Group E"
             groupTeams={result.E}
-            teams={teams}
             matches={matches}
           />
           <GroupList
             groupName="Group F"
             groupTeams={result.F}
-            teams={teams}
             matches={matches}
           />
         </div>
