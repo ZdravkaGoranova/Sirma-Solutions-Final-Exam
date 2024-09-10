@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { loadCSV } from '../utils/csvUtils.js';
-import { calculatePoints, getWinner } from '../utils/teamsUtils.js';
+import { loadCSV } from '../../utils/csvUtils.js';
+import { calculatePoints, getWinner } from '../../utils/teamsUtils.js';
 
-import Loading from './Loading.jsx';
-import GroupList from './GroupList.jsx';
+import Loading from '../Loading/Loading.jsx';
+import GroupList from '../GroupList/GroupList.jsx';
 
 export default function Home({ teams, setTeams, matches, setMatches }) {
   useEffect(() => {
