@@ -1,8 +1,5 @@
 export function fieldsValidation(hasFields) {
-  console.log('fieldsValidation');
-
   const containsID = hasFields.every((innerArray) => innerArray.includes('ID'));
-
   const containsATeamID = hasFields.every((innerArray) =>
     innerArray.includes('ATeamID'),
   );
@@ -17,38 +14,38 @@ export function fieldsValidation(hasFields) {
   );
 
   if (
-    !containsATeamID &&
-    !containsBTeamID &&
-    !containsDate &&
-    !containsScore &&
+    !containsATeamID ||
+    !containsBTeamID ||
+    !containsDate ||
+    !containsScore ||
     !containsID
   ) {
-    console.error('Invalid filds data');
-    return false;
+    throw new Error('Invalid fields data');
   }
+
+  console.log('Fields validation is correct');
+  return true;
 }
 
 // Score validation
 export function scoreValidation(matchesData) {
-  console.log('scoreValidation');
-
   const scoreRegex = /\(?\d+\(\d+\)?-\(?\d+\(\d+\)?|\d+-\d+/;
 
   const resultFieldsScore = matchesData.map((mach) =>
     scoreRegex.test(mach.Score),
   );
 
-  const isHaveNotCorectScore = resultFieldsScore.includes('false');
+  const isHaveNotCorectScore = resultFieldsScore.includes(false);
 
   if (isHaveNotCorectScore) {
-    console.error('Invalid score format:', matchesData);
-    return false;
+    throw new Error('Invalid score format');
   }
+  console.log('Score validation is corect');
+  return true;
 }
 
 // ID  validation
 export function idValidation(matchesData) {
-  console.log('idValidation');
   const resultFieldsID = matchesData.map((mach) => {
     if (!isNaN(mach.ID) && !isNaN(parseFloat(mach.ID))) {
       return true;
@@ -57,18 +54,17 @@ export function idValidation(matchesData) {
     }
   });
 
-  const isHaveNotCorectID = resultFieldsID.includes('false');
+  const isHaveNotCorectID = resultFieldsID.includes(false);
 
   if (isHaveNotCorectID) {
-    console.error('Invalid ID format:', matchesData);
-    return false;
+    throw new Error('Invalid ID format');
   }
+  console.log('ID  validation is corect');
+  return true;
 }
 
 // ATeamID  validation
 export function aTeamIDValidation(matchesData) {
-  console.log(`aTeamIDValidation`);
-
   const resultFieldsATeamID = matchesData.map((mach) => {
     if (!isNaN(mach.ATeamID) && !isNaN(parseFloat(mach.ATeamID))) {
       return true;
@@ -77,17 +73,17 @@ export function aTeamIDValidation(matchesData) {
     }
   });
 
-  const isHaveNotCorectATeamID = resultFieldsATeamID.includes('false');
+  const isHaveNotCorectATeamID = resultFieldsATeamID.includes(false);
 
   if (isHaveNotCorectATeamID) {
-    console.error('Invalid ATeamID format:', matchesData);
-    return false;
+    throw new Error('Invalid BTeamID format');
   }
+  console.log('ATeamID  validation is corect');
+  return true;
 }
 
 // BTeamID  validation
 export function bTeamIDValidation(matchesData) {
-  console.log(`bTeamIDValidation`);
   const resultFieldsBTeamID = matchesData.map((mach) => {
     if (!isNaN(mach.BTeamID) && !isNaN(parseFloat(mach.BTeamID))) {
       return true;
@@ -96,25 +92,26 @@ export function bTeamIDValidation(matchesData) {
     }
   });
 
-  const isHaveNotCorectBTeamID = resultFieldsBTeamID.includes('false');
+  const isHaveNotCorectBTeamID = resultFieldsBTeamID.includes(false);
 
   if (isHaveNotCorectBTeamID) {
-    console.error('Invalid BTeamID format:', matchesData);
-    return false;
+    throw new Error('Invalid BTeamID format');
   }
+  console.log('BTeamID  validation is corect');
+  return true;
 }
 
 // Date  validation
 export function dateIDValidation(matchesData) {
-  console.log(`dateIDValidation`);
   const resultFieldsDate = matchesData.map((mach) => isValidDate(mach.Date));
 
   const isHaveNotCorectDate = resultFieldsDate.includes(false);
 
   if (isHaveNotCorectDate) {
-    console.error('Invalid Date format:', matchesData);
-    return false;
+    throw new Error('Invalid Date format');
   }
+  console.log('Date  validation is corect');
+  return true;
 }
 
 // isValidDate
