@@ -12,7 +12,14 @@ import {
   aTeamIDValidation,
   bTeamIDValidation,
   dateIDValidation,
-} from '../../utils/fildsValidations.js';
+} from '../../utils/matchesValidations.js';
+import {
+  fieldsValidationTeams,
+  idValidationTeam,
+  groupValidation,
+  nameValidation,
+  fullNameValidation
+} from '../../utils/teamsValidations.js';
 
 import Loading from '../Loading/Loading.jsx';
 import GroupList from '../GroupList/GroupList.jsx';
@@ -30,6 +37,7 @@ export default function Home({ teams, setTeams, matches, setMatches }) {
 
         const hasFieldsMatches = matchesData.map((mach) => Object.keys(mach));
 
+        // maches validations
         try {
           fieldsValidation(hasFieldsMatches);
         } catch (err) {
@@ -69,6 +77,39 @@ export default function Home({ teams, setTeams, matches, setMatches }) {
           dateIDValidation(matchesData);
         } catch (err) {
           setError('Date validation failed: ' + err.message);
+          return;
+        }
+        // teams validations
+        const hasFieldsTeams = teamsData.map((team) => Object.keys(team));
+        try {
+          fieldsValidationTeams(hasFieldsTeams);
+        } catch (err) {
+          setError('Fields validation failed into teams file: ' + err.message);
+          return;
+        }
+        try {
+          idValidationTeam(teamsData);
+        } catch (err) {
+          setError('ID validation failed into teams file: ' + err.message);
+          return;
+        }
+        try {
+          groupValidation(teamsData);
+        } catch (err) {
+          setError('ID validation failed into teams file: ' + err.message);
+          return;
+        }
+
+        try {
+          nameValidation(teamsData);
+        } catch (err) {
+          setError('Name validation failed into teams file: ' + err.message);
+          return;
+        }
+        try {
+          fullNameValidation(teamsData);
+        } catch (err) {
+          setError('Name validation failed into teams file: ' + err.message);
           return;
         }
 
