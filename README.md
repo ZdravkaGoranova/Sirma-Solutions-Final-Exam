@@ -1,4 +1,11 @@
 # Sirma Solutions Final Exam Project
+## Overview
+
+This project was developed as part of the **Final Exam** for the Sirma Solutions program. The purpose of this project is to demonstrate skills in working with React.
+
+The application provides features to manage and visualize match data and player statistics from CSV files. It implements several data validation mechanisms and displays the results through a user-friendly interface.
+
+
 
 ### Installation Steps
 
@@ -42,7 +49,16 @@
  - `App.jsx` 
  - `main.jsx`
  - `index.css`
-- `App.css` 
+- `App.css`
+  
+### Routes:
+
+Here are the available routes:
+
+- `/` : homepage 
+- `/teamDetails` :displays team details view
+- `/matchDetails` : displays match details views
+
 # Routes views
 
 ## Home Page view Group Winner
