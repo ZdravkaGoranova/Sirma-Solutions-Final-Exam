@@ -1,0 +1,17 @@
+.list-players {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  gap: 30px;
+}
+
+.result {
+  background-color: #ddffdd;
+  border-left: 6px solid #04aa6d;
+  margin-bottom: 15px;
+  padding: 4px 12px;
+}
+.payerInfo{
+  text-align: start;
+}
