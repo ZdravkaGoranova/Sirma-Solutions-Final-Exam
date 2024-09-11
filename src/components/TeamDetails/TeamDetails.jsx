@@ -9,6 +9,7 @@ import {
   idValidationPlayer,
   idValidationTeamNumber,
   idValidationTeamID,
+  positionValidation,
 } from '../../utils/playersValidations.js';
 export default function TeamDetails() {
   const [players, setPlayers] = useState([]);
@@ -27,24 +28,30 @@ export default function TeamDetails() {
           setError('Name validation failed into teams file: ' + err.message);
           return;
         }
-         try {
-           idValidationPlayer(data);
-         } catch (err) {
-           setError('ID validation failed: ' + err.message);
-           return;
-         }
-           try {
-             idValidationTeamNumber(data);
-           } catch (err) {
-             setError('TeamNumber validation failed: ' + err.message);
-             return;
-           }
-            try {
-              idValidationTeamID(data);
-            } catch (err) {
-              setError('TeamID validation failed: ' + err.message);
-              return;
-            }
+        try {
+          idValidationPlayer(data);
+        } catch (err) {
+          setError('ID validation failed: ' + err.message);
+          return;
+        }
+        try {
+          idValidationTeamNumber(data);
+        } catch (err) {
+          setError('TeamNumber validation failed: ' + err.message);
+          return;
+        }
+        try {
+          idValidationTeamID(data);
+        } catch (err) {
+          setError('TeamID validation failed: ' + err.message);
+          return;
+        }
+        try {
+          positionValidation(data);
+        } catch (err) {
+          setError('Position validation  failed: ' + err.message);
+          return;
+        }
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('An error occurred while loading data.');

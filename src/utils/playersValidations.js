@@ -93,3 +93,38 @@ export function idValidationTeamID(playerData) {
   console.log('TeamID validation is correct');
   return true;
 }
+// Position validation
+
+export function positionValidation(teamsData) {
+  const positionArray = [
+    'GK',
+    'CB',
+    'RB',
+    'LB',
+    'RWB',
+    'LWB',
+    'CM',
+    'CDM',
+    'CAM',
+    'RM',
+    'LM',
+    'ST',
+    'CF',
+    'RF',
+    'LF',
+    'RW',
+    'LW',
+    'DF',
+    'MF',
+    'FW',
+  ];
+
+  teamsData.forEach((team) => {
+    if (!positionArray.includes(team.Position)) {
+      throw new Error(`Invalid Position format for`);
+    }
+  });
+
+  console.log('Position and FullName validation are correct');
+  return true;
+}
