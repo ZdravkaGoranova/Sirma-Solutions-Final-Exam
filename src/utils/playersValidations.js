@@ -22,7 +22,7 @@ export function fieldsValidationPlayers(playersArray) {
 }
 
 // ID  validation
-export function idValidationTeam(teamsData) {
+export function idValidationPlayer(teamsData) {
   const resultFieldsID = teamsData.map((team) => {
     if (!isNaN(team.ID) && !isNaN(parseFloat(team.ID))) {
       return true;
@@ -40,23 +40,7 @@ export function idValidationTeam(teamsData) {
   return true;
 }
 
-// ID  validation
 
-export function idValidationPlayer(playerData) {
-  const resultFieldsID = playerData.map((team) => {
-    const id = Number(team.ID);
-    return !Number.isNaN(id);
-  });
-
-  const isHaveNotCorectID = resultFieldsID.includes(false);
-
-  if (isHaveNotCorectID) {
-    throw new Error('Invalid ID format');
-  }
-
-  console.log('ID validation is correct');
-  return true;
-}
 
 // TeamNumber  validation
 

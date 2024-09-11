@@ -11,6 +11,7 @@ import {
   idValidationTeamID,
   positionValidation,
 } from '../../utils/playersValidations.js';
+
 export default function TeamDetails() {
   const [players, setPlayers] = useState([]);
   const [selectedTeamID, setSelectedTeamID] = useState('All');

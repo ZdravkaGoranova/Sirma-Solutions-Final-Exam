@@ -6,6 +6,22 @@ import { loadCSV } from '../../utils/csvUtils.js';
 
 import './MatchDetails.css';
 
+import {
+  fieldsValidationPlayers,
+  idValidationPlayer,
+  idValidationTeamNumber,
+  idValidationTeamID,
+  positionValidation,
+} from '../../utils/playersValidations.js';
+import {
+  fieldsValidationRecords,
+  idValidationRecords,
+  playerIDValidationRecords,
+  matchIDValidationRecords,
+  fromMinutesValidationRecords,
+  toMinutesValidationRecords,
+} from '../../utils/recordValidations.js';
+
 export default function MatchDetails() {
   const location = useLocation();
   const { aTeam, bTeam, match } = location.state || {};
@@ -16,15 +32,93 @@ export default function MatchDetails() {
 
   const [players, setPlayers] = useState([]);
   const [records, setRecords] = useState([]);
+  const [error, setError] = useState('');
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
   useEffect(() => {
     async function fetchData() {
-      const data = await loadCSV('/players.csv');
-      setPlayers(data);
-      const dataRecord = await loadCSV('/records.csv');
-      setRecords(dataRecord);
+      try {
+        const data = await loadCSV('/players.csv');
+        setPlayers(data);
+        const dataRecord = await loadCSV('/records.csv');
+        setRecords(dataRecord);
+
+        try {
+          fieldsValidationPlayers(data);
+        } catch (err) {
+          setError('Name validation failed into teams file: ' + err.message);
+          return;
+        }
+        try {
+          idValidationPlayer(data);
+        } catch (err) {
+          setError('ID validation failed: ' + err.message);
+          return;
+        }
+        try {
+          idValidationTeamNumber(data);
+        } catch (err) {
+          setError('TeamNumber validation failed: ' + err.message);
+          return;
+        }
+        try {
+          idValidationTeamID(data);
+        } catch (err) {
+          setError('TeamID validation failed: ' + err.message);
+          return;
+        }
+        try {
+          positionValidation(data);
+        } catch (err) {
+          setError('Position validation  failed: ' + err.message);
+          return;
+        }
+        try {
+          fieldsValidationRecords(dataRecord);
+        } catch (err) {
+          setError('Name validation failed into  records: ' + err.message);
+          return;
+        }
+
+        try {
+          idValidationRecords(dataRecord);
+        } catch (err) {
+          setError('Name validation failed into  records: ' + err.message);
+          return;
+        }
+
+        try {
+          playerIDValidationRecords(dataRecord);
+        } catch (err) {
+          setError('Name validation failed into  records: ' + err.message);
+          return;
+        }
+
+        try {
+          matchIDValidationRecords(dataRecord);
+        } catch (err) {
+          setError('Name validation failed into  records: ' + err.message);
+          return;
+        }
+
+        try {
+          fromMinutesValidationRecords(dataRecord);
+        } catch (err) {
+          setError('Name validation failed into  records: ' + err.message);
+          return;
+        }
+
+        try {
+          toMinutesValidationRecords(dataRecord);
+        } catch (err) {
+          setError('Name validation failed into  records: ' + err.message);
+          return;
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('An error occurred while loading data.');
+      }
     }
     fetchData();
   }, []);
@@ -35,7 +129,7 @@ export default function MatchDetails() {
     }
   });
 
-  // console.log('records:', records);
+  console.log('records:', records);
   // console.log('players:', players);
 
   const sortedPlayers = [...players].sort((a, b) => {
@@ -124,67 +218,80 @@ export default function MatchDetails() {
 
   return (
     <>
-      <h2>Result from Direct duels Group: {aTeam.group}</h2>
-      <div className="result">
-        <p>
-          <strong>Match ID {match.ID}:</strong>
-        </p>
-        <p>
-          <strong>
-            {aTeam.name} vs {bTeam.name}
-          </strong>
-        </p>
-        <p>
-          <strong>
-            Score:
-            <i>{match.Score}</i>
-          </strong>
-        </p>
-      </div>
-      <div className="list-players">
-        <ol>
-          <h2>Players of team {aTeam.name}</h2>
-          {playersInMatchATeam.map((player, index) => (
-            <li key={index} className="payerInfo">
-              {/* <p>FullName: {player.FullName}</p>
-              <p> Position: {player.Position}</p>
-              <p>PlayTime: {player.matches[match.ID].playTime}</p> */}
-              <table id="players">
-                <tr>
-                  <th>FullName</th>
-                  <th>Position</th>
-                  <th>PlayTime</th>
-                </tr>
-                <tr>
-                  <td>{player.FullName}</td>
-                  <td>{player.Position}</td>
-                  <td>{player.matches[match.ID].playTime}</td>
-                </tr>
-              </table>
-            </li>
-          ))}
-        </ol>
-        <ol>
-          <h2>Players of team {bTeam.name}</h2>
-          {playersInMatchBTeam.map((player, index) => (
-            <li key={index} className="payerInfo">
-              {/* Position: {player.Position} - FullName: {player.FullName} */}
-              <table id="players">
-                <tr>
-                  <th>FullName</th>
-                  <th>Position</th>
-                  <th>PlayTime</th>
-                </tr>
-                <tr>
-                  <td>{player.FullName}</td>
-                  <td>{player.Position}</td>
-                  <td>{player.matches[match.ID].playTime}</td>
-                </tr>
-              </table>
-            </li>
-          ))}
-        </ol>
-      </div>
+      {error ? (
+        <div>
+          <h1>Team Details</h1>
+          <h3 className="error">Error: {error}</h3>
+        </div>
+      ) : (
+        <div>
+          <h2>Result from Direct duels Group: {aTeam.group}</h2>
+          <div className="result">
+            <p>
+              <strong>Match ID {match.ID}:</strong>
+            </p>
+            <p>
+              <strong>
+                {aTeam.name} vs {bTeam.name}
+              </strong>
+            </p>
+            <p>
+              <strong>
+                Score:
+                <i>{match.Score}</i>
+              </strong>
+            </p>
+          </div>
+          <div className="list-players">
+            <ol>
+              <h2>Players of team {aTeam.name}</h2>
+              {playersInMatchATeam.map((player, index) => (
+                <li key={index} className="payerInfo">
+                  <table id="players">
+                    <thead>
+                      <tr>
+                        <th>FullName</th>
+                        <th>Position</th>
+                        <th>PlayTime</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{player.FullName}</td>
+                        <td>{player.Position}</td>
+                        <td>{player.matches[match.ID].playTime}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </li>
+              ))}
+            </ol>
+            <ol>
+              <h2>Players of team {bTeam.name}</h2>
+              {playersInMatchBTeam.map((player, index) => (
+                <li key={index} className="payerInfo">
+                  <table id="players">
+                    <thead>
+                      <tr>
+                        <th>FullName</th>
+                        <th>Position</th>
+                        <th>PlayTime</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{player.FullName}</td>
+                        <td>{player.Position}</td>
+                        <td>{player.matches[match.ID].playTime}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      )}
     </>
   );
 }
