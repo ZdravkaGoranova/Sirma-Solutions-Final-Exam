@@ -128,11 +128,17 @@ export default function MatchDetails() {
       <div className="result">
         <p>
           <strong>Match ID {match.ID}:</strong>
-          {aTeam.name} vs {bTeam.name}
         </p>
         <p>
-          <strong>Score: </strong>
-          <i>{match.Score}</i>
+          <strong>
+            {aTeam.name} vs {bTeam.name}
+          </strong>
+        </p>
+        <p>
+          <strong>
+            Score:
+            <i>{match.Score}</i>
+          </strong>
         </p>
       </div>
       <div className="list-players">
@@ -151,9 +157,7 @@ export default function MatchDetails() {
                 </tr>
                 <tr>
                   <td>{player.FullName}</td>
-                  <td >
-                    {player.Position}
-                  </td>
+                  <td>{player.Position}</td>
                   <td>{player.matches[match.ID].playTime}</td>
                 </tr>
               </table>
@@ -173,9 +177,7 @@ export default function MatchDetails() {
                 </tr>
                 <tr>
                   <td>{player.FullName}</td>
-                  <td >
-                    {player.Position}
-                  </td>
+                  <td>{player.Position}</td>
                   <td>{player.matches[match.ID].playTime}</td>
                 </tr>
               </table>
