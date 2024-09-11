@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 import './Home.css';
 
@@ -18,7 +19,7 @@ import {
   idValidationTeam,
   groupValidation,
   nameValidation,
-  fullNameValidation
+  fullNameValidation,
 } from '../../utils/teamsValidations.js';
 
 import Loading from '../Loading/Loading.jsx';
@@ -26,6 +27,7 @@ import GroupList from '../GroupList/GroupList.jsx';
 
 export default function Home({ teams, setTeams, matches, setMatches }) {
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
@@ -155,6 +157,16 @@ export default function Home({ teams, setTeams, matches, setMatches }) {
   console.log(teams);
   console.log(matches);
 
+  const handleRowClick = (match) => {
+    const aTeam = teams[match.ATeamID];
+    const bTeam = teams[match.BTeamID];
+
+    navigate('/matchDetails', {
+      state: { aTeam, bTeam, match },
+    });
+    //   return <MatchDetails aTeam={aTeam} bTeam={bTeam} match={match} />;
+  };
+
   const teamsArray = Object.values(teams);
 
   const result = teamsArray.reduce((acc, team) => {
@@ -232,7 +244,11 @@ export default function Home({ teams, setTeams, matches, setMatches }) {
               </thead>
               <tbody>
                 {matches.map((match, index) => (
-                  <tr key={index}>
+                  <tr
+                    key={index}
+                    onClick={() => handleRowClick(match)}
+                    className="navMach"
+                  >
                     <td>
                       {getWinner(
                         teams[match.ATeamID],

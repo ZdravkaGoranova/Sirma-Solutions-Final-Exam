@@ -4,15 +4,59 @@ import { loadCSV } from '../../utils/csvUtils.js';
 import './TeamDetails.css';
 import Loading from '../Loading/Loading.jsx';
 
+import {
+  fieldsValidationPlayers,
+  idValidationPlayer,
+  idValidationTeamNumber,
+  idValidationTeamID,
+  positionValidation,
+} from '../../utils/playersValidations.js';
+
 export default function TeamDetails() {
   const [players, setPlayers] = useState([]);
   const [selectedTeamID, setSelectedTeamID] = useState('All');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function fetchData() {
-      const data = await loadCSV('/players.csv');
-      setPlayers(data);
+      try {
+        const data = await loadCSV('/players.csv');
+        setPlayers(data);
+        try {
+          fieldsValidationPlayers(data);
+        } catch (err) {
+          setError('Name validation failed into teams file: ' + err.message);
+          return;
+        }
+        try {
+          idValidationPlayer(data);
+        } catch (err) {
+          setError('ID validation failed: ' + err.message);
+          return;
+        }
+        try {
+          idValidationTeamNumber(data);
+        } catch (err) {
+          setError('TeamNumber validation failed: ' + err.message);
+          return;
+        }
+        try {
+          idValidationTeamID(data);
+        } catch (err) {
+          setError('TeamID validation failed: ' + err.message);
+          return;
+        }
+        try {
+          positionValidation(data);
+        } catch (err) {
+          setError('Position validation  failed: ' + err.message);
+          return;
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('An error occurred while loading data.');
+      }
     }
     fetchData();
   }, []);
@@ -52,54 +96,63 @@ export default function TeamDetails() {
 
   return (
     <>
-      <div className="players-list">
-        <h1>Team Details</h1>
+      {error ? (
+        <div>
+          <h1>Team Details</h1>
+          <h3 className="error">Error: {error}</h3>
+        </div>
+      ) : (
+        <div className="players-list">
+          <h1>Team Details</h1>
 
-        {players.length <= 0 ? (
-          <Loading />
-        ) : (
-          <div>
-            <div className="teamIDFilter">
-              <label htmlFor="teamIDFilter">Filter by TeamID: </label>
-              <select
-                id="teamIDFilter"
-                value={selectedTeamID}
-                onChange={handleTeamIDChange}
-              >
-                <option value="All">ALL</option>
-                {uniqueTeamIDs.map((teamID, index) => (
-                  <option key={index} value={teamID}>
-                    {teamID}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {players.length <= 0 ? (
+            <Loading />
+          ) : (
+            <div>
+              <div className="teamIDFilter">
+                <label htmlFor="teamIDFilter">Filter by TeamID: </label>
+                <select
+                  id="teamIDFilter"
+                  value={selectedTeamID}
+                  onChange={handleTeamIDChange}
+                >
+                  <option value="All">ALL</option>
+                  {uniqueTeamIDs.map((teamID, index) => (
+                    <option key={index} value={teamID}>
+                      {teamID}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <table id="players">
-              <thead>
-                <tr>
-                  <th>TeamNumber</th>
-                  <th>FullName</th>
-                  <th onClick={() => handleSort('Position')}>Position</th>
-                  <th>TeamID</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPlayers.map((player, index) => (
-                  <tr key={index}>
-                    <td>{player.TeamNumber}</td>
-                    <td>{player.FullName}</td>
-                    <td className={`position ${player.Position.toLowerCase()}`}>
-                      {player.Position}
-                    </td>
-                    <td>{player.TeamID}</td>
+              <table id="players">
+                <thead>
+                  <tr>
+                    <th>TeamNumber</th>
+                    <th>FullName</th>
+                    <th onClick={() => handleSort('Position')}>Position</th>
+                    <th>TeamID</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                </thead>
+                <tbody>
+                  {filteredPlayers.map((player, index) => (
+                    <tr key={index}>
+                      <td>{player.TeamNumber}</td>
+                      <td>{player.FullName}</td>
+                      <td
+                        className={`position ${player.Position.toLowerCase()}`}
+                      >
+                        {player.Position}
+                      </td>
+                      <td>{player.TeamID}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 }
