@@ -10,9 +10,9 @@ export default function MatchDetails() {
   const location = useLocation();
   const { aTeam, bTeam, match } = location.state || {};
 
-  console.log(aTeam);
-  console.log(bTeam);
-  console.log(match);
+  console.log('aTeam:', aTeam);
+  console.log('bTeam:', bTeam);
+  console.log('match:', match);
 
   const [players, setPlayers] = useState([]);
   const [records, setRecords] = useState([]);
@@ -34,8 +34,9 @@ export default function MatchDetails() {
       record.toMinutes = 90;
     }
   });
-  console.log(records);
-  console.log(players);
+
+  console.log('records:', records);
+  console.log('players:', players);
 
   const sortedPlayers = [...players].sort((a, b) => {
     if (sortConfig.key) {
@@ -56,33 +57,30 @@ export default function MatchDetails() {
   const filteredPlayersATeam = sortedPlayers.filter(
     (player) => Number(player.TeamID) === aTeam.id,
   );
-  console.log(filteredPlayersATeam);
+  console.log('filteredPlayersATeam:', filteredPlayersATeam);
 
   const filteredPlayersBTeam = sortedPlayers.filter(
     (player) => Number(player.TeamID) === bTeam.id,
   );
-  console.log(filteredPlayersBTeam);
-
-  const playerPlayTimesForMatchID = {};
-  console.log(records);
+  console.log('filteredPlayersBTeam:', filteredPlayersBTeam);
 
   filteredPlayersATeam.forEach((player) => {
-   
-    debugger;
     records.forEach((record) => {
       if (player.ID === record.PlayerID) {
         const playTime = record.toMinutes - Number(record.fromMinutes);
 
-        if (filteredPlayersATeam[player.ID]) {
-          playerPlayTimesForMatchID[player.FullName][record.matchID] = {
-            fromMinutes: Number(record.fromMinutes),
-            toMinutes: record.toMinutes,
-            playTime: playTime,
-          };
+        const playerToUpdate = player;
+
+        if (playerToUpdate) {
+          playerToUpdate.MatchID = playTime;
+          playerToUpdate.fromMinutes = Number(record.fromMinutes);
+          playerToUpdate.toMinutes = record.toMinutes;
+          playerToUpdate.playTime = playTime;
         }
       }
     });
   });
+  console.log('filteredPlayersATeam:', filteredPlayersATeam);
 
   // records.forEach((record) => {
   //   if (record.toMinutes === 'NULL') {
@@ -119,7 +117,8 @@ export default function MatchDetails() {
       <h2>Result from Direct duels Group: {aTeam.group}</h2>
       <div className="result">
         <p>
-          <strong>Match:</strong> {aTeam.name} vs {bTeam.name}
+          <strong>Match ID {match.ID}:</strong>
+          {aTeam.name} vs {bTeam.name}
         </p>
         <p>
           <strong>Score: </strong>
