@@ -5,6 +5,13 @@ This project was developed as part of the **Final Exam** for the Sirma Solutions
 
 The application provides features to manage and visualize match data and player statistics from CSV files. It implements several data validation mechanisms and displays the results through a user-friendly interface.
 
+## Features
+
+- **CSV File Handling**: Load and parse player,matches,records  and teams from CSV files.
+- **Data Validation**: Multiple validation functions for player,matches,records  and teams, ensuring data integrity.
+- **Sorting and Filtering**: Sort players  by TeamID and Position parameters into  rout `/teamDetails`.
+- **Detailed Match View**: Display detailed information about matches and players, including playing time, positions,full name, Score and match ID into  rout `/matchDetails`.
+- **Error Handling**: Display of validation errors and data load issues in the user interface.
 
 
 ### Installation Steps
