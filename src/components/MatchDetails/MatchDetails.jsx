@@ -35,8 +35,8 @@ export default function MatchDetails() {
     }
   });
 
-  console.log('records:', records);
-  console.log('players:', players);
+  // console.log('records:', records);
+  // console.log('players:', players);
 
   const sortedPlayers = [...players].sort((a, b) => {
     if (sortConfig.key) {
@@ -57,60 +57,70 @@ export default function MatchDetails() {
   const filteredPlayersATeam = sortedPlayers.filter(
     (player) => Number(player.TeamID) === aTeam.id,
   );
-  console.log('filteredPlayersATeam:', filteredPlayersATeam);
-
-  const filteredPlayersBTeam = sortedPlayers.filter(
-    (player) => Number(player.TeamID) === bTeam.id,
-  );
-  console.log('filteredPlayersBTeam:', filteredPlayersBTeam);
 
   filteredPlayersATeam.forEach((player) => {
     records.forEach((record) => {
       if (player.ID === record.PlayerID) {
         const playTime = record.toMinutes - Number(record.fromMinutes);
 
-        const playerToUpdate = player;
-
-        if (playerToUpdate) {
-          playerToUpdate.MatchID = playTime;
-          playerToUpdate.fromMinutes = Number(record.fromMinutes);
-          playerToUpdate.toMinutes = record.toMinutes;
-          playerToUpdate.playTime = playTime;
+        if (!player.matches) {
+          player.matches = {};
         }
+
+        player.matches[record.MatchID] = {
+          fromMinutes: Number(record.fromMinutes),
+          toMinutes: record.toMinutes,
+          playTime: playTime,
+        };
       }
     });
   });
   console.log('filteredPlayersATeam:', filteredPlayersATeam);
 
-  // records.forEach((record) => {
-  //   if (record.toMinutes === 'NULL') {
-  //     record.toMinutes = 90;
-  //   }
+  const playersInMatchATeam = filteredPlayersATeam.filter((player) => {
+    return player.matches && player.matches[match.ID];
+  });
 
-  //   const player = players.find((p) => p.ID === record.PlayerID);
-  //   if (!player) return;
-  //   const matchID = record.MatchID;
-  //   const playTime = record.toMinutes - Number(record.fromMinutes);
+  console.log(
+    'Players of  ATeam,who played  into MACH ID',
+    match.ID,
+    ':',
+    playersInMatchATeam,
+  );
 
-  //   debugger;
-  //   if (!playerPlayTimesForMatchID[player.FullName]) {
-  //     playerPlayTimesForMatchID[player.FullName] = {
-  //       FullName: player.FullName,
-  //       ID: Number(player.ID),
-  //       Position: player.Position,
-  //       TeamID: Number(player.TeamID),
-  //       TeamNumber: Number(player.TeamNumber),
-  //     };
-  //   }
-  //   if (!playerPlayTimesForMatchID[player.FullName][matchID]) {
-  //     playerPlayTimesForMatchID[player.FullName][matchID] = {
-  //       fromMinutes: Number(record.fromMinutes),
-  //       toMinutes: record.toMinutes,
-  //       playTime: playTime,
-  //     };
-  //   }
-  // });
-  // console.log(playerPlayTimesForMatchID);
+  const filteredPlayersBTeam = sortedPlayers.filter(
+    (player) => Number(player.TeamID) === bTeam.id,
+  );
+
+  filteredPlayersBTeam.forEach((player) => {
+    records.forEach((record) => {
+      if (player.ID === record.PlayerID) {
+        const playTime = record.toMinutes - Number(record.fromMinutes);
+
+        if (!player.matches) {
+          player.matches = {};
+        }
+
+        player.matches[record.MatchID] = {
+          fromMinutes: Number(record.fromMinutes),
+          toMinutes: record.toMinutes,
+          playTime: playTime,
+        };
+      }
+    });
+  });
+  console.log('filteredPlayersBTeam:', filteredPlayersBTeam);
+
+  const playersInMatchBTeam = filteredPlayersBTeam.filter((player) => {
+    return player.matches && player.matches[match.ID];
+  });
+
+  console.log(
+    'Players of  BTeam,who played  into MACH ID',
+    match.ID,
+    ':',
+    playersInMatchBTeam,
+  );
 
   return (
     <>
@@ -128,17 +138,47 @@ export default function MatchDetails() {
       <div className="list-players">
         <ol>
           <h2>Players of team {aTeam.name}</h2>
-          {filteredPlayersATeam.map((player, index) => (
+          {playersInMatchATeam.map((player, index) => (
             <li key={index} className="payerInfo">
-              Position: {player.Position} - FullName: {player.FullName}
+              {/* <p>FullName: {player.FullName}</p>
+              <p> Position: {player.Position}</p>
+              <p>PlayTime: {player.matches[match.ID].playTime}</p> */}
+              <table id="players">
+                <tr>
+                  <th>FullName</th>
+                  <th>Position</th>
+                  <th>PlayTime</th>
+                </tr>
+                <tr>
+                  <td>{player.FullName}</td>
+                  <td >
+                    {player.Position}
+                  </td>
+                  <td>{player.matches[match.ID].playTime}</td>
+                </tr>
+              </table>
             </li>
           ))}
         </ol>
         <ol>
           <h2>Players of team {bTeam.name}</h2>
-          {filteredPlayersBTeam.map((player, index) => (
+          {playersInMatchBTeam.map((player, index) => (
             <li key={index} className="payerInfo">
-              Position: {player.Position} - FullName: {player.FullName}
+              {/* Position: {player.Position} - FullName: {player.FullName} */}
+              <table id="players">
+                <tr>
+                  <th>FullName</th>
+                  <th>Position</th>
+                  <th>PlayTime</th>
+                </tr>
+                <tr>
+                  <td>{player.FullName}</td>
+                  <td >
+                    {player.Position}
+                  </td>
+                  <td>{player.matches[match.ID].playTime}</td>
+                </tr>
+              </table>
             </li>
           ))}
         </ol>
