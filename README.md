@@ -1,15 +1,18 @@
 # Sirma Solutions Final Exam Project
+
+## Football tournament website 
+
 ## Overview
 
 This project was developed as part of the **Final Exam** for the Sirma Solutions program. The purpose of this project is to demonstrate skills in working with React.
 
 The application provides features to manage and visualize match data and player statistics from CSV files. It implements several data validation mechanisms and displays the results through a user-friendly interface.
 
-On the home page, the results of all matches played up to the final date of June 26, 2024, are displayed, along with the winner of each match. Additionally, the home page shows the teams in each group with their information on points, wins, draws, and losses. When a `row in the results table is clicked`, a new page `matchDetails` is rendered.
+On the home page `/`, the results of all matches played up to the final date of June 26, 2024, are displayed, along with the winner of each match. Additionally, the home page shows the teams in each group with their information on points, wins, draws, and losses. When a `row in the results table is clicked`, a new page `/matchDetails` is rendered.
 
-In `matchDetails`, information about the played match is displayed, including the team names, group, match score, and a table listing all participants who played in the match. The table shows information for each participant, including their full name, position, and how long they played in the match.
+In `/matchDetails`, information about the played match is displayed, including the team names, group, match score, and a table listing all participants who played in the match. The table shows information for each participant, including their full name, position, and how long they played in the match.
 
-The application also contains a `TeamDetails` page. In `TeamDetails`, information about all teams is displayed. You can select a specific team using the `"Filter by TeamID" button` to filter by team number. The data for all teams or the selected team can also be `sorted by position by clicking on the "position" field`.
+The application also contains a `TeamDetails` page. In `/teamDetails`, information about all teams is displayed. You can select a specific team using the `"Filter by TeamID" button` to filter by team number. The data for all teams or the selected team can also be `sorted by position by clicking on the "position" field`.
 
 ## Features
 
